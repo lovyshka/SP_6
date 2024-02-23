@@ -11,17 +11,18 @@
 #include <pthread.h>
 
 struct arguments{
-    int * numbers;
+    int * arr;
     int len_of_arr;
 };
 
 
-int * divided_properly(int number_of_child, int number_of_numbers, int * to_much_child);
-char * generate_input_filename(int i);
-char * generate_output_filename(int i);
-void create_n_input_output_files(int * arr, int * distribution, int number_of_child) ;
-void print_data_in_the_file(char * filename, int * objects_for_write, int number_of_objects);
-int get_total_sum(int number_of_child);
+int * divided_properly(int number_of_child, int number_of_numbers);
 int from_string_to_int(char * arg);
-int sum_numbers(int arr_len, int * arr);
 void * routine(void * data_struct);
+int wait_for_threads(int number_of_threads, pthread_t * arr_of_threads);
+int create_threads_and_pass_args(int number_of_threads, pthread_t * arr_of_threads, struct arguments * original_args);
+void init_arguments(int number_of_threads, int * distribution, struct arguments * original_args, int * arr);
+void free_dynamic(int * distribution, int * arr, struct arguments * original_args, pthread_t * arr_of_threads);
+void work_with_thread(int number_of_threads, int * arr, int arr_len);
+void check_and_reduce(int * number_of_threads, int arr_len);
+int get_number_of_input(FILE * fp);

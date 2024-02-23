@@ -5,6 +5,9 @@ clean:
 	rm -rf subproc a.out
 	rm -rf input*.txt output*.txt
 
+rebuild: clean all
+
+
 test: 
 	gcc subproc.c -o subproc
 
