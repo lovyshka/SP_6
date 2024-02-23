@@ -3,13 +3,18 @@
 #include <stdlib.h>
 #include <math.h>
 #include <windows.h>
+#include <tchar.h>
+#include <strsafe.h>
+
+struct arguments{
+    int * arr;
+    int len_of_arr;
+};
 
 int from_string_to_int(char * arg);
-int * divided_properly(int number_of_child, int number_of_numbers, int * to_much_child);
-void create_n_input_output_files(int * arr, int * distribution, int number_of_child);
-void print_data_in_the_file(char * filename, int * objects_for_write, int number_of_objects);
-char * generate_input_filename(int i);
-char * generate_output_filename(int i);
-int get_total_sum(int number_of_child);
-int sum_numbers(int arr_len, int * arr);
-char * concat_string(char * args[4]);
+int * divided_properly(int number_of_child, int number_of_numbers);
+int get_number_of_input(FILE * fp);
+void check_and_reduce(int * number_of_threads, int arr_len);
+void init_arguments(int number_of_threads, int * distribution, struct arguments * original_args, int * arr);
+void create_threads_and_pass_args(int number_of_threads, HANDLE * arr_of_threads, struct arguments * original_args, DWORD * thread_id_arr);
+void work_with_thread(int number_of_threads, int * arr, int arr_len);

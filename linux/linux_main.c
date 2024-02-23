@@ -25,7 +25,6 @@ void * routine(void * data_struct){
 
 
 int main(int argc, char *argv[]){
-    
     if (argc == 3){
         int number_of_threads = from_string_to_int(argv[2]);
         FILE * fp = fopen(argv[1], "r");
