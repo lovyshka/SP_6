@@ -14,7 +14,7 @@ DWORD WINAPI routine( LPVOID data_struct ){
         }    
     }
 
-    Sleep(300000);
+    // Sleep(300000);
     EnterCriticalSection(&cs);
     SUM += tmp_sum;
     LeaveCriticalSection(&cs);
