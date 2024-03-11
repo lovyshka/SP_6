@@ -26,3 +26,7 @@ void free_dynamic(int * distribution, int * arr, struct arguments * original_arg
 void work_with_thread(int number_of_threads, int * arr, int arr_len);
 void check_and_reduce(int * number_of_threads, int arr_len);
 int get_number_of_input(FILE * fp);
+int check_argc(int argc);
+int lovit_cal(FILE * fp, int number_of_threads);
+int check_data(int data_cnt);
+void body(FILE * fp, int number_of_threads, int data_cnt);

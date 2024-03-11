@@ -25,50 +25,74 @@ void * routine(void * data_struct){
 
 
 int main(int argc, char *argv[]){
-    if (argc == 3){
-        int number_of_threads = from_string_to_int(argv[2]);
-        FILE * fp = fopen(argv[1], "r");
-        if (fp != NULL){
-            int data_cnt = get_number_of_input(fp);
-            if (data_cnt > 1){
-                if (number_of_threads > 0 && number_of_threads <= 32750){
-                    check_and_reduce(&number_of_threads, data_cnt);
+    if (check_argc(argc) == 1) return -1; //checek argc
 
-                    int batch_size = 10;
-                    int tmp, arr_len = 0;
-                    int * arr = (int *) calloc(1, sizeof(int) * batch_size); 
-                    
-            
-                    while (fscanf(fp, "%d", &tmp) == 1){
-                        if ((arr_len % batch_size == 0) && arr_len != 0){
-                            work_with_thread(number_of_threads, arr, 10);
-                            memset(arr, 0, sizeof(int) * batch_size);
-                        }
-                        arr[arr_len % batch_size] = tmp;
-                        arr_len++;
-                        if ((arr_len == data_cnt) && arr_len != 0){
-                            work_with_thread(number_of_threads, arr, 10);
-                            memset(arr, 0, sizeof(int) * batch_size);
-                        }
-                    }
+    int number_of_threads = from_string_to_int(argv[2]); 
+    FILE * fp = fopen(argv[1], "r");
+    if (lovit_cal(fp, number_of_threads) == 1) return -1; //check valid fp and number_of_threads 
+    
+    int data_cnt = get_number_of_input(fp);
+    if (check_data(data_cnt) == 1) return -1; //validate number of data in file
+    
+    body(fp, number_of_threads, data_cnt);
 
-                    printf("total sum for curr input is = %d\n", SUM);
-                
-                }
-                else {
-                    printf("Invalid parameter file or number or children process given, be careful, that maximum number of threads is 32750\nAlso check the syntax, it has to be ./a.out [input file] [number of threads]\n");
-                }
-            }else {
-                    printf("Empty file given or there are less then 2 numbers\n");             
-            }
-            fclose(fp);     
-        }else{
-            printf("No such file\n");
+    fclose(fp);     
+    return 0;
+}
+
+void body(FILE * fp, int number_of_threads, int data_cnt){
+    check_and_reduce(&number_of_threads, data_cnt);
+
+    int batch_size = 10;
+    int tmp, arr_len = 0;
+    int * arr = (int *) calloc(1, sizeof(int) * batch_size); 
+
+    while (fscanf(fp, "%d", &tmp) == 1){
+        if ((arr_len % batch_size == 0) && arr_len != 0){
+            work_with_thread(number_of_threads, arr, 10);
+            memset(arr, 0, sizeof(int) * batch_size);
         }
-    } else {
+        arr[arr_len % batch_size] = tmp;
+        arr_len++;
+        if ((arr_len == data_cnt) && arr_len != 0){
+            work_with_thread(number_of_threads, arr, 10);
+            memset(arr, 0, sizeof(int) * batch_size);
+        }
+    }
+
+    printf("total sum for curr input is = %d\n", SUM);
+
+}
+
+int check_argc(int argc){
+    int flag = 0;
+    if (argc != 3){
+        flag = 1;
         printf("Invalid number of arguments: see usage\n ./a.out [input file] [nuber of child process]\n");
     }
-    return 0;
+    return flag;
+}
+
+int lovit_cal(FILE * fp, int number_of_threads){
+    int flag = 0;
+    if (fp == NULL){
+        flag = 1;
+        printf("No such file\n");
+    }
+    else if (number_of_threads <= 0 || number_of_threads >= 32750){
+        flag = 1;
+        printf("Invalid parameter file or number or children process given, be careful, that maximum number of threads is 32750\nAlso check the syntax, it has to be ./a.out [input file] [number of threads]\n");
+    }
+    return flag;
+}
+
+int check_data(int data_cnt){
+    int flag = 0;
+    if (data_cnt < 1){
+        flag = 1;
+        printf("Empty file given or there are less then 2 numbers\n");
+    }
+    return flag;
 }
 
 int get_number_of_input(FILE * fp){
